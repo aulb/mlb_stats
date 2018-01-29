@@ -119,6 +119,9 @@ class MLBGameCard extends Component {
 			awayTeamName
 		} = this.state;
 
+		const pitching = detailedData['data']['boxscore']['pitching'];
+		const inningData = detailedData['data']['boxscore']['inning'];
+
 		return (<section>
 		<MLBGameInnings 
 			linescore={linescore}
@@ -127,7 +130,7 @@ class MLBGameCard extends Component {
 			awayCode={awayCode}
 		/>
 		<MLBGameTab
-			pitching={detailedData}
+			pitching={pitching}
 			homeTeamName={homeTeamName}
 			awayTeamName={awayTeamName}
 		/>

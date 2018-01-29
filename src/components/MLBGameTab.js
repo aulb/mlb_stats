@@ -3,8 +3,8 @@ import propTypes from 'prop-types';
 import {
 	Tabbar,
 	Tab,
-	List,
-	ListItem
+	Grid,
+	Cell
 } from 'react-mdc-web/lib';
 
 const HOME_TEAM = 0;
@@ -13,7 +13,24 @@ const DEFAULT_TAB_STATE = {
 	active: HOME_TEAM,
 	homeTeamName: '',
 	awayTeamName: '',
+	homeData: {},
+	awayData: {},
 	pitching: {}
+};
+
+const makePitcherGrid = (pitcher) => {
+	return (<section>
+		<Grid>
+			<Cell col={3}>Name</Cell>
+			<Cell col={1}>AB</Cell>
+			<Cell col={1}>R</Cell>
+			<Cell col={1}>H</Cell>
+			<Cell col={1}>RBI</Cell>
+			<Cell col={1}>BB</Cell>
+			<Cell col={1}>SO</Cell>
+			<Cell col={1}>AVG</Cell>
+		</Grid>
+	</section>);
 };
 
 class MLBGameTab extends Component {
@@ -30,9 +47,22 @@ class MLBGameTab extends Component {
 			pitching
 		} = this.props;
 
+		let awayData = {};
+		let homeData = {};
+		for (let i = 0; i < pitching.length; i++) {
+			let currentPitch = pitching[i];
+			if (currentPitch['team_flag'] === 'home') {
+				homeData = currentPitch;
+			} else {
+				awayData = currentPitch;
+			}
+		}
+
 		this.setState({
 			homeTeamName,
 			awayTeamName,
+			homeData,
+			awayData,
 			pitching
 		});
 	}
@@ -67,7 +97,7 @@ class MLBGameTab extends Component {
 MLBGameTab.propTypes = {
 	homeTeamName: propTypes.string.isRequired,
 	awayTeamName: propTypes.string.isRequired,
-	pitching: propTypes.object.isRequired
+	pitching: propTypes.array.isRequired
 }
 
 export default MLBGameTab;

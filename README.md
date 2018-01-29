@@ -1,6 +1,5 @@
 - TODO: CORS issue with everything in 2014: proxy required
 Resolution: demo on gitio
-- TODO: Card Header
 - TODO: More stats, homeruns and player lists
 - TODO: Ordering by faves
 - TODO: Adding homeruns
@@ -15,3 +14,7 @@ Resolution: demo on gitio
 
 - TODO: Change dates, date picker
 - TODO: Active tab state
+
+
+- TODO: GameCard needs major cleanup
+- TODO: GameCard header needs to be bold and strong
