@@ -13,6 +13,7 @@ import {
 	Tabbar,
 	Tab
 } from 'react-mdc-web/lib';
+import MLBGameInnings from './MLBGameInnings';
 import MLBAPIClient from '../utils/MLBAPIClient';
 
 const styles = {
@@ -38,28 +39,6 @@ const DEFAULT_GAME_STATE = {
 	playedInnings: 0,
 	revealDetails: false,
 };
-
-const transformInningScores = (inningScores) => {
-	const result = {
-		'home': [], 
-		'away': []
-	};
-
-	for (let i = 0; i < inningScores.length; i++) {
-		result['home'].push(inningScores[i]['home']);
-		result['away'].push(inningScores[i]['away']);
-	}
-
-	return result;
-}
-
-const makeInningScoreCells = (inningScores) => {
-	return inningScores.map((inningScore, index) => 
-		(<Cell col={1} key={`${index}${inningScore}`}>
-			{ inningScore !== undefined ? inningScore: 'x' }
-		</Cell>)
-	);
-}
 
 class MLBGameCard extends Component {
 	constructor(props) {
@@ -130,39 +109,21 @@ class MLBGameCard extends Component {
 	}
 
 	generateGameDetail() {
-		const {
-			homeCode,
-			awayCode,
+		const { 
 			linescore,
-			playedInnings
+			playedInnings,
+			homeCode,
+			awayCode
 		} = this.state;
+		return (<MLBGameInnings 
+			linescore={linescore}
+			playedInnings={playedInnings}
+			homeCode={homeCode}
+			awayCode={awayCode}
+		/>);
+	}
 
-		const { r, h, e, inning } = linescore;
-		const inningScores = transformInningScores(inning);
-
-		inningScores['home'].map((inningScore) => (<Cell col={1}>{ inningScore !== undefined ? inningScore: 0 }</Cell>));
-		console.log(inningScores)
-
-		let playedInningCells = [];
-		for (let i = 0; i < playedInnings; i++) {
-			playedInningCells.push(<Cell col={1} key={i}>{i + 1}</Cell>)
-		}
-
-		console.log(playedInningCells, playedInnings);
-
-		return (<section>
-		<Grid>
-			<Cell col={2}></Cell>
-			{ playedInningCells }
-		</Grid>
-		<Grid>
-			<Cell col={2}> { homeCode.toUpperCase() } </Cell>
-			{ makeInningScoreCells(inningScores['home']) }
-		</Grid>
-		<Grid>
-			<Cell col={2}> { awayCode.toUpperCase() } </Cell>
-			{ makeInningScoreCells(inningScores['away']) }
-		</Grid>
+/*
 		<Tabbar>
 			<Tab
 				active={true}
@@ -176,9 +137,7 @@ class MLBGameCard extends Component {
 			</Tab>
 			<span className="mdc-tab-bar__indicator"></span>
 		</Tabbar>
-		</section>
-		);
-	}
+*/
 
 	generateButton() {
 		return (<CardActions>

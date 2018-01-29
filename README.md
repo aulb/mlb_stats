@@ -12,3 +12,6 @@ Resolution: demo on gitio
 - TODO: Use inning_line_score instead
 - TODO: Innings into its new component
 - TODO: Stats into its new stats toggle
+
+
+- TODO: Active tab state
