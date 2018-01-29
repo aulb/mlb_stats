@@ -22,6 +22,9 @@ const styles = {
 	}
 };
 
+const HIDE = false;
+const SHOW = true;
+
 const DEFAULT_GAME_STATE = {
 	gameStatus: '',
 	homeTeamName: '',
@@ -40,6 +43,8 @@ const DEFAULT_GAME_STATE = {
 	revealDetails: false,
 	// Data after Details button is clicked
 	detailedData: {},
+	// Turn the detail button into hide button
+	buttonAction: HIDE
 };
 
 class MLBGameCard extends Component {
@@ -154,8 +159,9 @@ class MLBGameCard extends Component {
 	}
 
 	generateButton() {
+		const { buttonAction } = this.state;
 		return (<CardActions>
-			<Button onClick={this.getGameDetail}>Details</Button>
+			<Button onClick={this.getGameDetail}>{}</Button>
 		</CardActions>);
 	}
 

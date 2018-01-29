@@ -34,11 +34,13 @@ const makePitcherGrid = (pitcherData) => {
 			era
 		} = pitcher;
 
+		console.log(pitcher);
+
 		const cells = [name_display_first_last, ab, r, h, rbi, bb, so, era].map((stat, innerIndex) => {
 			const cellSize = innerIndex === 0? 3: 1;
-			return (<Cell col={cellSize} key={`${innerIndex}_${index}`}>{stat}</Cell>);
+			return (<Cell col={cellSize} key={`${innerIndex}`}>{stat}</Cell>);
 		});	
-		return (<Grid>{cells}</Grid>)
+		return (<Grid key={index}>{cells}</Grid>)
 	});
 
 	console.log(pitcherCells);

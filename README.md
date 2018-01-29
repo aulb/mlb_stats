@@ -2,7 +2,6 @@
 Resolution: demo on gitio
 - TODO: More stats, homeruns and player lists
 - TODO: Ordering by faves
-- TODO: Adding homeruns
 - TODO: Ability to change dates
 - TODO: Everything to maps, no for loops
 - TODO: Stop loading when GAME CARD CLICKED
