@@ -1,0 +1,18 @@
+/*This css fixes the nesting problem:*/
+.mdc-layout-grid {
+  margin: 0px;
+  padding: 3px;
+}
+
+/*This is not a solution, because it also removes spacing above the red blocks:*/
+/*.mdc-layout-grid .mdc-layout-grid {
+  grid-row-gap: 0;
+}*/
+
+.mdc-layout-grid__cell--collapse-top {
+  margin-top: 0 !important;
+}
+
+.mdc-layout-grid__cell--collapse-bottom {
+  margin-bottom: 0 !important;
+}
