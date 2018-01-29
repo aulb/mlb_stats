@@ -13,6 +13,9 @@ import MLBGameTab from './MLBGameTab';
 import MLBGameInnings from './MLBGameInnings';
 import MLBAPIClient from '../utils/MLBAPIClient';
 
+// Emergency offline development
+import { detail } from '../emergency_detail';
+
 const styles = {
 	winningTeam: {
 		fontWeight: 'bold'
@@ -54,21 +57,29 @@ class MLBGameCard extends Component {
 		let isDetailsLoaded = false;
 		let detailedData = null;
 
-		MLBAPIClient
-			.get(detailEndpoint)
-			.then((response) => {
-				detailedData = response.data;
-				isDetailsLoaded = true;
-			})
-			.then(() => {
-				this.setState({
-					isDetailsLoaded,
-					detailedData
-				});
-			})
-			.catch(() => {
-				console.log('Network Error :(')
-			});		
+		detailedData = detail;
+		isDetailsLoaded = true;
+		this.setState({
+			isDetailsLoaded,
+			detailedData
+		});
+
+
+		// MLBAPIClient
+		// 	.get(detailEndpoint)
+		// 	.then((response) => {
+		// 		detailedData = response.data;
+		// 		isDetailsLoaded = true;
+		// 	})
+		// 	.then(() => {
+		// 		this.setState({
+		// 			isDetailsLoaded,
+		// 			detailedData
+		// 		});
+		// 	})
+		// 	.catch(() => {
+		// 		console.log('Network Error :(')
+		// 	});		
 	}
 
 	componentDidMount() {
@@ -93,6 +104,8 @@ class MLBGameCard extends Component {
 			awayScore = linescore['r']['away'];
 		}
 
+		console.log(`${game_data_directory.replace('/components/game/mlb/', '')}/boxscore.json`);
+
 		this.setState({
 			gameStatus: status['status'],
 			homeTeamName: home_team_name,
@@ -116,7 +129,8 @@ class MLBGameCard extends Component {
 			awayCode,
 			detailedData,
 			homeTeamName,
-			awayTeamName
+			awayTeamName,
+			isDetailsLoaded
 		} = this.state;
 
 		const pitching = detailedData['data']['boxscore']['pitching'];
@@ -128,11 +142,13 @@ class MLBGameCard extends Component {
 			playedInnings={playedInnings}
 			homeCode={homeCode}
 			awayCode={awayCode}
+			isDetailsLoaded={isDetailsLoaded}
 		/>
 		<MLBGameTab
 			pitching={pitching}
 			homeTeamName={homeTeamName}
 			awayTeamName={awayTeamName}
+			isDetailsLoaded={isDetailsLoaded}
 		/>
 		</section>);
 	}
@@ -154,6 +170,7 @@ class MLBGameCard extends Component {
 			isDetailsLoaded,
 		} = this.state;
 
+		console.log(isDetailsLoaded, 'GAMECARD')
 		// Should be under game details
 		return (
 			<Card style={{width: '600px'}}>
@@ -161,7 +178,7 @@ class MLBGameCard extends Component {
 				<CardTitle>
 					<span style={ homeScore > awayScore ? styles.winningTeam: null }>
 						{ `${homeTeamName} (${homeScore})` }
-					</span> 
+					</span>
 					&nbsp; | &nbsp;
 					<span style={ awayScore > homeScore ? styles.winningTeam: null }>
 						{ `${awayTeamName} (${awayScore})` }

@@ -36,16 +36,13 @@ function MLBGameInnings({
 }) {
 	const { r, h, e, inning } = linescore;
 	const inningScores = transformInningScores(inning);
-
 	inningScores['home'].map((inningScore) => (<Cell col={1}>{ inningScore !== undefined ? inningScore: 0 }</Cell>));
-	console.log(inningScores)
 
+	// Default innings...
 	let playedInningCells = [];
 	for (let i = 0; i < playedInnings; i++) {
 		playedInningCells.push(<Cell col={1} key={i}>{i + 1}</Cell>)
 	}
-
-	console.log(playedInningCells, playedInnings);
 
 	return (<section>
 	<Grid>
@@ -72,7 +69,8 @@ MLBGameInnings.propTypes = {
 	inningData: propTypes.object,
 	playedInnings: propTypes.number.isRequired,
 	homeCode: propTypes.string.isRequired,
-	awayCode: propTypes.string.isRequired
+	awayCode: propTypes.string.isRequired,
+	isDetailsLoaded: propTypes.bool
 }
 
 export default MLBGameInnings;

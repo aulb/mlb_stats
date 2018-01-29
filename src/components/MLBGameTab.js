@@ -7,18 +7,42 @@ import {
 	Cell
 } from 'react-mdc-web/lib';
 
-const HOME_TEAM = 0;
-const AWAY_TEAM = 1;
+const HOME_TEAM = true;
+const AWAY_TEAM = false;
 const DEFAULT_TAB_STATE = {
-	active: HOME_TEAM,
+	active: true,
 	homeTeamName: '',
 	awayTeamName: '',
 	homeData: {},
 	awayData: {},
-	pitching: {}
+	pitching: {},
+	isDetailsLoaded: false
 };
 
-const makePitcherGrid = (pitcher) => {
+const makePitcherGrid = (pitcherData) => {
+	const pitchers = pitcherData['pitcher'];
+	const pitcherCells = pitchers.map((pitcher, index) => {
+		// order: name, AB, R, H, RBI, BB, SO, ERA 
+		const {
+			name_display_first_last,
+			ab,
+			r,
+			h,
+			rbi,
+			bb,
+			so,
+			era
+		} = pitcher;
+
+		const cells = [name_display_first_last, ab, r, h, rbi, bb, so, era].map((stat, innerIndex) => {
+			const cellSize = innerIndex === 0? 3: 1;
+			return (<Cell col={cellSize} key={`${innerIndex}_${index}`}>{stat}</Cell>);
+		});	
+		return (<Grid>{cells}</Grid>)
+	});
+
+	console.log(pitcherCells);
+
 	return (<section>
 		<Grid>
 			<Cell col={3}>Name</Cell>
@@ -28,8 +52,9 @@ const makePitcherGrid = (pitcher) => {
 			<Cell col={1}>RBI</Cell>
 			<Cell col={1}>BB</Cell>
 			<Cell col={1}>SO</Cell>
-			<Cell col={1}>AVG</Cell>
+			<Cell col={1}>ERA</Cell>
 		</Grid>
+		{ pitcherCells }
 	</section>);
 };
 
@@ -44,7 +69,8 @@ class MLBGameTab extends Component {
 		const {
 			homeTeamName,
 			awayTeamName,
-			pitching
+			pitching,
+			isDetailsLoaded
 		} = this.props;
 
 		let awayData = {};
@@ -63,7 +89,8 @@ class MLBGameTab extends Component {
 			awayTeamName,
 			homeData,
 			awayData,
-			pitching
+			pitching,
+			isDetailsLoaded
 		});
 	}
 
@@ -74,8 +101,17 @@ class MLBGameTab extends Component {
 	}
 
 	render() {
-		const { active, homeTeamName, awayTeamName } = this.state;
-		return (<Tabbar>
+		const { 
+			active, 
+			homeTeamName, 
+			awayTeamName,
+			homeData,
+			awayData,
+			isDetailsLoaded
+		} = this.state;
+
+		return (<div>
+		<Tabbar>
 			<Tab
 				active={active === HOME_TEAM}
 				onClick={this.tabSwitch}
@@ -89,7 +125,9 @@ class MLBGameTab extends Component {
 			{ awayTeamName }
 			</Tab>
 			<span className="mdc-tab-bar__indicator"></span>
-		</Tabbar>)
+		</Tabbar>
+		{ isDetailsLoaded? makePitcherGrid(active === HOME_TEAM ? homeData: awayData): null }
+		</div>)
 	}
 }
 	
@@ -97,7 +135,8 @@ class MLBGameTab extends Component {
 MLBGameTab.propTypes = {
 	homeTeamName: propTypes.string.isRequired,
 	awayTeamName: propTypes.string.isRequired,
-	pitching: propTypes.array.isRequired
+	pitching: propTypes.array.isRequired,
+	isDetailsLoaded: propTypes.bool
 }
 
 export default MLBGameTab;

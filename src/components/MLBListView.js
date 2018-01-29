@@ -8,7 +8,9 @@ import {
 	padZero, 
 	genericErrorHandling 
 } from '../utils/utils';
-// import Calendar from 'rc-calendar';
+
+// Emergency offline development
+import { scoreboard } from '../emergency_scoreboard';
 
 const DEFAULT_LIST_STATE = {
 	date: new Date(2016, 2, 29),
@@ -38,22 +40,31 @@ class MLBListView extends Component {
 		let numberOfGames = 0;		
 		let isDataLoaded = true;		
 
-		MLBAPIClient
-			.get(`year_${year}/month_${month}/day_${day}/master_scoreboard.json`)
-			.then((response) => {
-				isDataLoaded = true;
-				data = response.data;
-				data = transformGameObject(data['data']['games']['game']);
-				numberOfGames = data.length;
-			})
-			.then(() => {
-				this.setState({
-					data,
-					numberOfGames,
-					isDataLoaded
-				});
-			})
-			.catch(genericErrorHandling);
+		data = scoreboard;
+		data = transformGameObject(data['data']['games']['game']);
+		numberOfGames = data.length;
+		this.setState({
+			data,
+			numberOfGames,
+			isDataLoaded
+		});
+
+		// MLBAPIClient
+		// 	.get(`year_${year}/month_${month}/day_${day}/master_scoreboard.json`)
+		// 	.then((response) => {
+		// 		isDataLoaded = true;
+		// 		data = response.data;
+		// 		data = transformGameObject(data['data']['games']['game']);
+		// 		numberOfGames = data.length;
+		// 	})
+		// 	.then(() => {
+		// 		this.setState({
+		// 			data,
+		// 			numberOfGames,
+		// 			isDataLoaded
+		// 		});
+		// 	})
+		// 	.catch(genericErrorHandling);
 	}
 
 	generateGameRows() {

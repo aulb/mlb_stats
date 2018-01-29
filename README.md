@@ -18,3 +18,7 @@ Resolution: demo on gitio
 
 - TODO: GameCard needs major cleanup
 - TODO: GameCard header needs to be bold and strong
+- TODO: Fix tab switching indicator
+
+# Notes 
+- Imports must fall under src
