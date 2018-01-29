@@ -150,8 +150,6 @@ class MLBGameCard extends Component {
 
 		console.log(playedInningCells, playedInnings);
 
-		// TODO: Card Header
-		// TODO: More stats, homeruns and player lists
 		return (<section>
 		<Grid>
 			<Cell col={2}></Cell>

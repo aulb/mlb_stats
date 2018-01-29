@@ -5,16 +5,7 @@ import MLBGameCard from './MLBGameCard';
 import { getYearMonthDay, padZero } from '../utils/utils';
 import { transformGameObject } from '../utils/MLBUtils';
 // import Calendar from 'rc-calendar';
-// TODO: Ordering by faves
-// TODO: Adding homeruns
-// TODO: Ability to change dates
-// TODO: Everything to maps, no for loops
-// TODO: Stop loading when GAME CARD CLICKED
-// TODO: Why playedInnings?
-// TODO: Convert detail button to reveal and hide details button
-// TODO: Use inning_line_score instead
-// Innings into its new component
-// Stats into its new stats toggle
+
 
 class MLBListView extends Component {
 	constructor() {
