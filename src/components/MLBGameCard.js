@@ -7,12 +7,9 @@ import {
 	CardSubtitle,
 	CardText, 
 	CardActions, 
-	Button,
-	Grid,
-	Cell,
-	Tabbar,
-	Tab
+	Button
 } from 'react-mdc-web/lib';
+import MLBGameTab from './MLBGameTab';
 import MLBGameInnings from './MLBGameInnings';
 import MLBAPIClient from '../utils/MLBAPIClient';
 
@@ -38,6 +35,8 @@ const DEFAULT_GAME_STATE = {
 	// Number of innings
 	playedInnings: 0,
 	revealDetails: false,
+	// Data after Details button is clicked
+	detailedData: {},
 };
 
 class MLBGameCard extends Component {
@@ -47,23 +46,24 @@ class MLBGameCard extends Component {
 
 		this.getGameDetail = this.getGameDetail.bind(this);
 		this.generateGameDetail = this.generateGameDetail.bind(this);
-		this.generateTeamTabs = this.generateTeamTabs.bind(this);
 		this.generateButton = this.generateButton.bind(this);
 	}
 
 	getGameDetail() {
 		const { detailEndpoint } = this.state
 		let isDetailsLoaded = false;
+		let detailedData = null;
 
 		MLBAPIClient
 			.get(detailEndpoint)
 			.then((response) => {
-				console.log(response.data);
+				detailedData = response.data;
 				isDetailsLoaded = true;
 			})
 			.then(() => {
 				this.setState({
-					isDetailsLoaded
+					isDetailsLoaded,
+					detailedData
 				});
 			})
 			.catch(() => {
@@ -113,43 +113,31 @@ class MLBGameCard extends Component {
 			linescore,
 			playedInnings,
 			homeCode,
-			awayCode
+			awayCode,
+			detailedData,
+			homeTeamName,
+			awayTeamName
 		} = this.state;
-		return (<MLBGameInnings 
+
+		return (<section>
+		<MLBGameInnings 
 			linescore={linescore}
 			playedInnings={playedInnings}
 			homeCode={homeCode}
 			awayCode={awayCode}
-		/>);
+		/>
+		<MLBGameTab
+			pitching={detailedData}
+			homeTeamName={homeTeamName}
+			awayTeamName={awayTeamName}
+		/>
+		</section>);
 	}
-
-/*
-		<Tabbar>
-			<Tab
-				active={true}
-			>
-			homeTeamName
-			</Tab>
-			<Tab
-				active={false}
-			>
-			homeTeamName
-			</Tab>
-			<span className="mdc-tab-bar__indicator"></span>
-		</Tabbar>
-*/
 
 	generateButton() {
 		return (<CardActions>
 			<Button onClick={this.getGameDetail}>Details</Button>
 		</CardActions>);
-	}
-
-	generateTeamTabs() {
-		return (<Tabbar>
-			
-
-		</Tabbar>);
 	}
 
 	render() {

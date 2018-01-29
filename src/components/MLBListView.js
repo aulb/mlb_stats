@@ -1,21 +1,26 @@
 import React, { Component } from 'react';
 
-import MLBAPIClient from '../utils/MLBAPIClient';
 import MLBGameCard from './MLBGameCard';
-import { getYearMonthDay, padZero } from '../utils/utils';
+import MLBAPIClient from '../utils/MLBAPIClient';
 import { transformGameObject } from '../utils/MLBUtils';
+import { 
+	getYearMonthDay, 
+	padZero, 
+	genericErrorHandling 
+} from '../utils/utils';
 // import Calendar from 'rc-calendar';
 
+const DEFAULT_LIST_STATE = {
+	date: new Date(2016, 2, 29),
+	data: [],
+	numberOfGames: 0,
+	isDataLoaded: false,
+}
 
 class MLBListView extends Component {
 	constructor() {
 		super();
-		this.state = {
-			date: new Date(2016, 2, 29),
-			data: [],
-			numberOfGames: 0,
-			isDataLoaded: false,
-		}
+		this.state = DEFAULT_LIST_STATE;
 		this.fetchDataFromApi = this.fetchDataFromApi.bind(this);
 		this.generateGameRows = this.generateGameRows.bind(this);
 	}
@@ -23,7 +28,6 @@ class MLBListView extends Component {
 	componentDidMount() {
 		this.fetchDataFromApi();
 	}
-
 
 	fetchDataFromApi() {
 		let { year, month, day } = getYearMonthDay(this.state.date);
@@ -49,30 +53,24 @@ class MLBListView extends Component {
 					isDataLoaded
 				});
 			})
-			.catch(() => {
-				console.log('Network Error :(')
-			});
-
+			.catch(genericErrorHandling);
 	}
 
 	generateGameRows() {
 		let { data, numberOfGames, isDataLoaded } = this.state;
-		let gameRows = [];
-		// Guarantee the data object to be an array
+		// Make sure data is loaded so we don't see
+		// ghost "no games today" load
 		if (isDataLoaded) {
-			if (numberOfGames > 0 && data !== []) {
-				for (let i = 0; i < data.length; i++) {
-					gameRows.push(
+			if (numberOfGames > 0) {
+				return data.map((gameData, index) => (
 					<MLBGameCard
-						key={i}
-						gameData={data[i]}
-					/>);
-				}
-			} else {
-				gameRows.push(<div>No games today</div>);
-			}
-		} 
-		return gameRows;
+						key={index}
+						gameData={gameData}
+					/>
+				))
+			} 
+			return (<div>No games today</div>);
+		}
 	}
 
 	render() {

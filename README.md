@@ -13,5 +13,5 @@ Resolution: demo on gitio
 - TODO: Innings into its new component
 - TODO: Stats into its new stats toggle
 
-
+- TODO: Change dates, date picker
 - TODO: Active tab state

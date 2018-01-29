@@ -15,3 +15,9 @@ export const pad = str => (originalString, desiredLength) => {
 }
 
 export const padZero = pad('0');
+
+// Default states for the stateful components
+
+export const genericErrorHandling = () => {
+	console.log('Network error, something went wrong.');
+}
