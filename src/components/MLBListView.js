@@ -15,15 +15,45 @@ import {
 } from 'react-mdc-web/lib';
 import { MLB_TEAMS, DEFAULT_LIST_STATE } from '../utils/MLBConstants';
 
+const PREVIOUS_DAY = 1;
+const NEXT_DAY = -1;
+const EPOCH_DAY = 24 * 60 * 60 * 1000;
+
 class MLBListView extends Component {
 	constructor() {
 		super();
 		this.state = DEFAULT_LIST_STATE;
 		this.fetchDataFromApi = this.fetchDataFromApi.bind(this);
 		this.generateGameRows = this.generateGameRows.bind(this);
+		this.switchDay = this.switchDay.bind(this);
 	}
 
 	componentDidMount() {
+		this.fetchDataFromApi();
+	}
+
+	switchDay(changeDay) {
+		const { date } = this.state;
+		/*
+		Why this logic?
+		new Date(new Date() + -1 * (24 * 60 * 60 * 1000))
+		Invalid Date
+		new Date(new Date() + (-1 * (24 * 60 * 60 * 1000)))
+		Invalid Date
+		new Date(new Date() - (-1 * (24 * 60 * 60 * 1000)))
+		Wed Jan 31 2018 08:28:16 GMT+0000 (UTC)
+		new Date(new Date() - (1 * (24 * 60 * 60 * 1000)))
+		Mon Jan 29 2018 08:28:21 GMT+0000 (UTC)
+		*/
+		const newDate = new Date(date - changeDay * EPOCH_DAY);
+
+		// On day switch, reset the states
+		this.setState(DEFAULT_LIST_STATE);
+		this.setState({
+			date: newDate
+		});
+
+		// Re-fetch data from endpoint
 		this.fetchDataFromApi();
 	}
 
@@ -78,9 +108,13 @@ class MLBListView extends Component {
 		const { date } = this.state;
 		return (<div>
 			<Title>
-				<Button>Previous Day</Button>
+				<Button
+					onClick={() => this.switchDay(PREVIOUS_DAY)}
+				>Previous Day</Button>
 				<strong>{ date.toDateString() } </strong>
-				<Button>Next Day</Button>
+				<Button
+					onClick={() => this.switchDay(NEXT_DAY)}
+				>Next Day</Button>
 			</Title>
 			<Headline>
 				Favorite Team: Blue Jays
