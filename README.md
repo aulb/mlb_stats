@@ -27,13 +27,18 @@ Resolution: demo on gitio
  -->
 
 ## Frontend
-- node v8.6.0
-- npm 5.4.2
+Please make sure these are here
+- node v8.6.0+
+- npm 5.4.2+
+or alternatively 1.2.1+
+- yarn
 
 To run the frontend...
-`npm install`
-`npm start`
-Go to localhost:3000 and interact
+- `git clone https://github.com/aulb/mlb_stats`
+- `cd mlb_stats`
+- `npm install` or `yarn install`
+- `npm start` or `yarn start`
+Go to localhost:3000 and interact!
 
 ## Missing requirements:
 - 2014 years needs proxy server
