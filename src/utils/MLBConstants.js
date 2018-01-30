@@ -81,3 +81,7 @@ export const DEFAULT_GAME_STATE = {
 	// Turn the detail button into hide button
 	buttonAction: HIDE
 };
+
+export const PREVIOUS_DAY = 1;
+export const NEXT_DAY = -1;
+export const EPOCH_DAY = 24 * 60 * 60 * 1000;

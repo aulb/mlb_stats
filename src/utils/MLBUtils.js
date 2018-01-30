@@ -29,7 +29,6 @@ export const sortByFavoriteTeam = (gameData, favoriteTeam) => {
 	// Modifies the gameData array to sort by favorite team
 	// Favorite teams comes first in the list
 	let front = 0;
-	let i = 0;
 
 	for (let i = 0; i < gameData.length; i++) {
 		// Check the home team name and away team name

@@ -13,23 +13,47 @@ import {
 	Headline,
 	Title
 } from 'react-mdc-web/lib';
-import { MLB_TEAMS, DEFAULT_LIST_STATE } from '../utils/MLBConstants';
-
-const PREVIOUS_DAY = 1;
-const NEXT_DAY = -1;
-const EPOCH_DAY = 24 * 60 * 60 * 1000;
+import { 
+	MLB_TEAMS, 
+	DEFAULT_LIST_STATE,
+	PREVIOUS_DAY,
+	NEXT_DAY,
+	EPOCH_DAY // avoid using moment library
+} from '../utils/MLBConstants';
 
 class MLBListView extends Component {
 	constructor() {
 		super();
 		this.state = DEFAULT_LIST_STATE;
+		this.switchDay = this.switchDay.bind(this);
+		this.switchFavoriteTeam = this.switchFavoriteTeam.bind(this);
 		this.fetchDataFromApi = this.fetchDataFromApi.bind(this);
 		this.generateGameRows = this.generateGameRows.bind(this);
-		this.switchDay = this.switchDay.bind(this);
+		this.makeTeamDropdown = this.makeTeamDropdown.bind(this);
 	}
 
 	componentDidMount() {
-		this.fetchDataFromApi();
+		const { date } = this.state;
+		this.fetchDataFromApi(date);
+	}
+
+	makeTeamDropdown() {
+		const teamDropdown = Object.keys(MLB_TEAMS).map(team => {
+			return (<option
+				key={team}
+				value={MLB_TEAMS[team]}
+				selected={MLB_TEAMS[team] === 'Blue Jays'}
+			>{MLB_TEAMS[team]}
+			</option>);
+		});
+
+		return (<select>{teamDropdown}</select>);
+	}
+
+	switchFavoriteTeam(team) {
+		this.setState({
+			favoriteTeam: team
+		});
 	}
 
 	switchDay(changeDay) {
@@ -54,11 +78,12 @@ class MLBListView extends Component {
 		});
 
 		// Re-fetch data from endpoint
-		this.fetchDataFromApi();
+		// Make sure state are changed
+		this.fetchDataFromApi(newDate);
 	}
 
-	fetchDataFromApi() {
-		let { year, month, day } = getYearMonthDay(this.state.date);
+	fetchDataFromApi(date) {
+		let { year, month, day } = getYearMonthDay(date);
 		month = padZero(String(month), 2);
 		day = padZero(String(day), 2);
 
@@ -117,7 +142,7 @@ class MLBListView extends Component {
 				>Next Day</Button>
 			</Title>
 			<Headline>
-				Favorite Team: Blue Jays
+				Favorite Team: { this.makeTeamDropdown(MLB_TEAMS) }
 			</Headline>
 			{ this.generateGameRows() }
 		</div>);

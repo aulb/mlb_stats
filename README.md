@@ -1,4 +1,4 @@
-- TODO: CORS issue with everything in 2014: proxy required
+<!-- - TODO: CORS issue with everything in 2014: proxy required
 Resolution: demo on gitio
 - TODO: More stats, homeruns and player lists
 - TODO: Ordering by faves
@@ -24,3 +24,21 @@ Resolution: demo on gitio
 
 - TODO: Redo innings
 - TODO: React dropdown
+ -->
+
+## Frontend
+- node v8.6.0
+- npm 5.4.2
+
+To run the frontend...
+`npm install`
+`npm start`
+Go to localhost:3000 and interact
+
+## Missing requirements:
+- 2014 years needs proxy server
+- Fetch on detail click, (need to only fetch once)
+- Date picker so we don't have to do previous day over and over
+- Changing fave team
+- Testing
+- More clean up and docs
