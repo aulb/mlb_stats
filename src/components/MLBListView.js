@@ -8,6 +8,12 @@ import {
 	padZero, 
 	genericErrorHandling 
 } from '../utils/utils';
+import { 
+	Headline,
+	Title,
+	Button
+} from 'react-mdc-web/lib';
+import { teamShort } from '../utils/MLBConstants';
 
 // Emergency offline development
 import { scoreboard } from '../emergency_scoreboard';
@@ -110,17 +116,16 @@ class MLBListView extends Component {
 	}
 
 	render() {
-		return (
-			<div>
-				<div>
-					March 29th, 2017 
-				</div>
-				<div>
-					Favorite Team: Blue Jays
-				</div>
-				{ this.generateGameRows() }
-			</div>
-		);
+		console.log(teamShort);
+		return (<div>
+			<Title>
+				<strong>March 29th, 2017 </strong>
+			</Title>
+			<Headline>
+				Favorite Team: Blue Jays
+			</Headline>
+			{ this.generateGameRows() }
+		</div>);
 	}
 }
 

@@ -44,7 +44,7 @@ const DEFAULT_GAME_STATE = {
 	// Data after Details button is clicked
 	detailedData: {},
 	// Turn the detail button into hide button
-	buttonAction: HIDE
+	buttonAction: SHOW
 };
 
 class MLBGameCard extends Component {
@@ -55,6 +55,16 @@ class MLBGameCard extends Component {
 		this.getGameDetail = this.getGameDetail.bind(this);
 		this.generateGameDetail = this.generateGameDetail.bind(this);
 		this.generateButton = this.generateButton.bind(this);
+		this.toggleDetail = this.toggleDetail.bind(this);
+	}
+
+	toggleDetail() {
+		const { buttonAction } = this.state;
+		this.getGameDetail();
+
+		this.setState({
+			buttonAction: !buttonAction
+		});
 	}
 
 	getGameDetail() {
@@ -161,7 +171,9 @@ class MLBGameCard extends Component {
 	generateButton() {
 		const { buttonAction } = this.state;
 		return (<CardActions>
-			<Button onClick={this.getGameDetail}>{}</Button>
+			<Button onClick={this.toggleDetail}>
+				{ buttonAction === SHOW? 'Details': 'Hide Details' }
+			</Button>
 		</CardActions>);
 	}
 

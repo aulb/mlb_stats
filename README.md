@@ -21,3 +21,6 @@ Resolution: demo on gitio
 
 # Notes 
 - Imports must fall under src
+
+- TODO: Redo innings
+- TODO: React dropdown
