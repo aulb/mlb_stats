@@ -12,39 +12,12 @@ import {
 import MLBGameTab from './MLBGameTab';
 import MLBGameInnings from './MLBGameInnings';
 import MLBAPIClient from '../utils/MLBAPIClient';
-
-// Emergency offline development
-import { detail } from '../emergency_detail';
+import { HIDE, SHOW, DEFAULT_GAME_STATE } from '../utils/MLBConstants';
 
 const styles = {
 	winningTeam: {
 		fontWeight: 'bold'
 	}
-};
-
-const HIDE = false;
-const SHOW = true;
-
-const DEFAULT_GAME_STATE = {
-	gameStatus: '',
-	homeTeamName: '',
-	awayTeamName: '',
-	homeCode: '',
-	awayCode: '',
-	homeScore: 0,
-	awayScore: 0,
-	detailEndpoint: '',
-	// Game details from ListView
-	isDataLoaded: false,
-	// Details from the first card click
-	isDetailsLoaded: false,
-	// Number of innings
-	playedInnings: 0,
-	revealDetails: false,
-	// Data after Details button is clicked
-	detailedData: {},
-	// Turn the detail button into hide button
-	buttonAction: SHOW
 };
 
 class MLBGameCard extends Component {
@@ -72,29 +45,21 @@ class MLBGameCard extends Component {
 		let isDetailsLoaded = false;
 		let detailedData = null;
 
-		detailedData = detail;
-		isDetailsLoaded = true;
-		this.setState({
-			isDetailsLoaded,
-			detailedData
-		});
-
-
-		// MLBAPIClient
-		// 	.get(detailEndpoint)
-		// 	.then((response) => {
-		// 		detailedData = response.data;
-		// 		isDetailsLoaded = true;
-		// 	})
-		// 	.then(() => {
-		// 		this.setState({
-		// 			isDetailsLoaded,
-		// 			detailedData
-		// 		});
-		// 	})
-		// 	.catch(() => {
-		// 		console.log('Network Error :(')
-		// 	});		
+		MLBAPIClient
+			.get(detailEndpoint)
+			.then((response) => {
+				detailedData = response.data;
+				isDetailsLoaded = true;
+			})
+			.then(() => {
+				this.setState({
+					isDetailsLoaded,
+					detailedData
+				});
+			})
+			.catch(() => {
+				console.log('Network Error :(')
+			});		
 	}
 
 	componentDidMount() {
@@ -118,8 +83,6 @@ class MLBGameCard extends Component {
 			homeScore = linescore['r']['home'];
 			awayScore = linescore['r']['away'];
 		}
-
-		console.log(`${game_data_directory.replace('/components/game/mlb/', '')}/boxscore.json`);
 
 		this.setState({
 			gameStatus: status['status'],
@@ -145,8 +108,11 @@ class MLBGameCard extends Component {
 			detailedData,
 			homeTeamName,
 			awayTeamName,
-			isDetailsLoaded
+			isDetailsLoaded,
+			buttonAction
 		} = this.state;
+
+		if (isDetailsLoaded && buttonAction === HIDE) return null;
 
 		const pitching = detailedData['data']['boxscore']['pitching'];
 		const inningData = detailedData['data']['boxscore']['inning'];
@@ -172,7 +138,7 @@ class MLBGameCard extends Component {
 		const { buttonAction } = this.state;
 		return (<CardActions>
 			<Button onClick={this.toggleDetail}>
-				{ buttonAction === SHOW? 'Details': 'Hide Details' }
+				{ buttonAction === SHOW? 'Hide Details': 'Details' }
 			</Button>
 		</CardActions>);
 	}
@@ -188,7 +154,6 @@ class MLBGameCard extends Component {
 			isDetailsLoaded,
 		} = this.state;
 
-		console.log(isDetailsLoaded, 'GAMECARD')
 		// Should be under game details
 		return (
 			<Card style={{width: '600px'}}>

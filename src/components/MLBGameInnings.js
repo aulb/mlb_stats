@@ -4,20 +4,7 @@ import {
 	Grid,
 	Cell
 } from 'react-mdc-web/lib';
-
-const transformInningScores = (inningScores) => {
-	const result = {
-		'home': [], 
-		'away': []
-	};
-
-	for (let i = 0; i < inningScores.length; i++) {
-		result['home'].push(inningScores[i]['home']);
-		result['away'].push(inningScores[i]['away']);
-	}
-
-	return result;
-}
+import { transformInningScores } from '../utils/MLBUtils';
 
 const makeInningScoreCells = (inningScores) => {
 	return inningScores.map((inningScore, index) => 
@@ -44,7 +31,9 @@ function MLBGameInnings({
 		playedInningCells.push(<Cell col={1} key={i}>{i + 1}</Cell>)
 	}
 
-	return (<section>
+	const extraStats = [r, h, e];
+
+	return (<div><section>
 	<Grid>
 		<Cell col={2}></Cell>
 		{ playedInningCells }
@@ -58,7 +47,24 @@ function MLBGameInnings({
 		{ makeInningScoreCells(inningScores['away']) }
 	</Grid>
 	</section>
-	);
+
+	<section>
+	<Grid>
+		<Cell col={2}></Cell>
+		<Cell col={1}>R</Cell>
+		<Cell col={1}>H</Cell>
+		<Cell col={1}>E</Cell>
+	</Grid>
+	<Grid>
+		<Cell col={2}> { homeCode.toUpperCase() } </Cell>
+		{ makeInningScoreCells(extraStats.map(stat => stat['home'])) }
+	</Grid>
+	<Grid>
+		<Cell col={2}> { awayCode.toUpperCase() } </Cell>
+		{ makeInningScoreCells(extraStats.map(stat => stat['away'])) }
+	</Grid>
+	</section>
+	</div>);
 }
 
 

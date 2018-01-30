@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import MLBGameCard from './MLBGameCard';
 import MLBAPIClient from '../utils/MLBAPIClient';
 import { transformGameObject } from '../utils/MLBUtils';
@@ -8,45 +7,13 @@ import {
 	padZero, 
 	genericErrorHandling 
 } from '../utils/utils';
+import { sortByFavoriteTeam } from '../utils/MLBUtils';
 import { 
+	Button,
 	Headline,
-	Title,
-	Button
+	Title
 } from 'react-mdc-web/lib';
-import { teamShort } from '../utils/MLBConstants';
-
-// Emergency offline development
-import { scoreboard } from '../emergency_scoreboard';
-
-const DEFAULT_LIST_STATE = {
-	date: new Date(2016, 2, 29),
-	// Data is populated as 
-	// [{gameData1}, {gameData2}, ...]
-	data: [],
-	numberOfGames: 0,
-	isDataLoaded: false,
-	favoriteTeam: 'Blue Jays'
-};
-
-const sortByFavoriteTeam = (gameData, favoriteTeam) => {
-	// Modifies the gameData array to sort by favorite team
-	let front = 0;
-	let i = 0;
-
-	for (let i = 0; i < gameData.length; i++) {
-		// Check the home team name and away team name
-		let { home_team_name, away_team_name } = gameData[i];
-		// If one of them is a match, swap with the "front" game
-		if (home_team_name === favoriteTeam || away_team_name === favoriteTeam) {
-			// Swap index `i` with index `front`
-			let temp = gameData[i];
-			gameData[i] = gameData[front];
-			gameData[front] = temp;
-			front++;
-		} 		
-	}
-	return gameData;
-};
+import { MLB_TEAMS, DEFAULT_LIST_STATE } from '../utils/MLBConstants';
 
 class MLBListView extends Component {
 	constructor() {
@@ -71,31 +38,23 @@ class MLBListView extends Component {
 
 		const { favoriteTeam } = this.state;	
 
-		data = scoreboard;
-		data = transformGameObject(data['data']['games']['game']);
-		numberOfGames = data.length;
-		this.setState({
-			data: sortByFavoriteTeam(data, favoriteTeam),
-			numberOfGames,
-			isDataLoaded
-		});
-
-		// MLBAPIClient
-		// 	.get(`year_${year}/month_${month}/day_${day}/master_scoreboard.json`)
-		// 	.then((response) => {
-		// 		isDataLoaded = true;
-		// 		data = response.data;
-		// 		data = transformGameObject(data['data']['games']['game']);
-		// 		numberOfGames = data.length;
-		// 	})
-		// 	.then(() => {
-		// 		this.setState({
-		// 			data,
-		// 			numberOfGames,
-		// 			isDataLoaded
-		// 		});
-		// 	})
-		// 	.catch(genericErrorHandling);
+		MLBAPIClient
+			.get(`year_${year}/month_${month}/day_${day}/master_scoreboard.json`)
+			.then((response) => {
+				isDataLoaded = true;
+				data = response.data;
+				data = transformGameObject(data['data']['games']['game']);
+				data = sortByFavoriteTeam(data, favoriteTeam);
+				numberOfGames = data.length;
+			})
+			.then(() => {
+				this.setState({
+					data,
+					numberOfGames,
+					isDataLoaded
+				});
+			})
+			.catch(genericErrorHandling);
 	}
 
 	generateGameRows() {
@@ -116,10 +75,12 @@ class MLBListView extends Component {
 	}
 
 	render() {
-		console.log(teamShort);
+		const { date } = this.state;
 		return (<div>
 			<Title>
-				<strong>March 29th, 2017 </strong>
+				<Button>Previous Day</Button>
+				<strong>{ date.toDateString() } </strong>
+				<Button>Next Day</Button>
 			</Title>
 			<Headline>
 				Favorite Team: Blue Jays

@@ -1,3 +1,7 @@
+/*
+ * This file contains utilities that can be shared by different files/components.
+ */
+
 export const getYearMonthDay = (date) => {
 	const year = date.getUTCFullYear();
 	const month = date.getUTCMonth() + 1;

@@ -6,18 +6,11 @@ import {
 	Grid,
 	Cell
 } from 'react-mdc-web/lib';
-
-const HOME_TEAM = true;
-const AWAY_TEAM = false;
-const DEFAULT_TAB_STATE = {
-	active: true,
-	homeTeamName: '',
-	awayTeamName: '',
-	homeData: {},
-	awayData: {},
-	pitching: {},
-	isDetailsLoaded: false
-};
+import {
+	HOME_TEAM,
+	AWAY_TEAM,
+	DEFAULT_TAB_STATE
+} from '../utils/MLBConstants';
 
 const makePitcherGrid = (pitcherData) => {
 	const pitchers = pitcherData['pitcher'];
@@ -34,16 +27,12 @@ const makePitcherGrid = (pitcherData) => {
 			era
 		} = pitcher;
 
-		console.log(pitcher);
-
 		const cells = [name_display_first_last, ab, r, h, rbi, bb, so, era].map((stat, innerIndex) => {
 			const cellSize = innerIndex === 0? 3: 1;
 			return (<Cell col={cellSize} key={`${innerIndex}`}>{stat}</Cell>);
 		});	
 		return (<Grid key={index}>{cells}</Grid>)
 	});
-
-	console.log(pitcherCells);
 
 	return (<section>
 		<Grid>
@@ -132,7 +121,6 @@ class MLBGameTab extends Component {
 		</div>)
 	}
 }
-	
 
 MLBGameTab.propTypes = {
 	homeTeamName: propTypes.string.isRequired,
