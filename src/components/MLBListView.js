@@ -14,10 +14,33 @@ import { scoreboard } from '../emergency_scoreboard';
 
 const DEFAULT_LIST_STATE = {
 	date: new Date(2016, 2, 29),
+	// Data is populated as 
+	// [{gameData1}, {gameData2}, ...]
 	data: [],
 	numberOfGames: 0,
 	isDataLoaded: false,
-}
+	favoriteTeam: 'Blue Jays'
+};
+
+const sortByFavoriteTeam = (gameData, favoriteTeam) => {
+	// Modifies the gameData array to sort by favorite team
+	let front = 0;
+	let i = 0;
+
+	for (let i = 0; i < gameData.length; i++) {
+		// Check the home team name and away team name
+		let { home_team_name, away_team_name } = gameData[i];
+		// If one of them is a match, swap with the "front" game
+		if (home_team_name === favoriteTeam || away_team_name === favoriteTeam) {
+			// Swap index `i` with index `front`
+			let temp = gameData[i];
+			gameData[i] = gameData[front];
+			gameData[front] = temp;
+			front++;
+		} 		
+	}
+	return gameData;
+};
 
 class MLBListView extends Component {
 	constructor() {
@@ -38,13 +61,15 @@ class MLBListView extends Component {
 
 		let data = [];
 		let numberOfGames = 0;		
-		let isDataLoaded = true;		
+		let isDataLoaded = true;
+
+		const { favoriteTeam } = this.state;	
 
 		data = scoreboard;
 		data = transformGameObject(data['data']['games']['game']);
 		numberOfGames = data.length;
 		this.setState({
-			data,
+			data: sortByFavoriteTeam(data, favoriteTeam),
 			numberOfGames,
 			isDataLoaded
 		});
